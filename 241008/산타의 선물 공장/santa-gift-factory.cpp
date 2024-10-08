@@ -82,6 +82,7 @@ void broken(int b_num){
         for(int i=1;i<M;i++){
             if(!Belt[(b_num+i)%M].empty()){
                 next=(b_num+i)%M;
+                break;
             }
         }
         
