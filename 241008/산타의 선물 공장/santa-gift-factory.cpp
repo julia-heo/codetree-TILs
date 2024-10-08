@@ -34,6 +34,11 @@ void getout(int w_max){
     cout<<total<<endl;
 }
 void remove(int r_id){
+    auto it = Box.find(r_id);
+    if(it == Box.end()) {
+        cout<<-1<<endl;
+        return;
+    }
     int bn=Box[r_id].second;
     if(bn==-1)cout<<-1<<endl;
     else{
