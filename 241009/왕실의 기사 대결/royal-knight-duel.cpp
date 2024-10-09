@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <vector>
 #include <queue>
-#include <deque>
+#include <set>
 using namespace std;
 int L,N,Q;
 int dx[]={-1,0,1,0};
@@ -21,51 +21,50 @@ struct knight {
 
 vector <knight> Knight;
 
-void move(int n,int d,deque<int> q){
-    vector <vector <int>> tmpLo(L+1,vector <int>(L+1,0));
-
-    while(!q.empty()){
-        int tmp=q.back();
-        q.pop_back();
-
+void move(int n,int d,set<int> s){
+    for (auto element : s){
         // 기존 위치 다 0으로 설정
-        for(int j=0;j<Knight[tmp].h;j++){
-            for(int k=0;k<Knight[tmp].w;k++){
-                knLo[Knight[tmp].r+j][Knight[tmp].c+k]=0;
+        for(int j=0;j<Knight[element].h;j++){
+            for(int k=0;k<Knight[element].w;k++){
+                knLo[Knight[element].r+j][Knight[element].c+k]=0;
             }
         }
-
+    }
+    for (auto element : s){
         // 위치정보 r,c 변경
-        Knight[tmp].r=Knight[tmp].r+dx[d];
-        Knight[tmp].c=Knight[tmp].c+dy[d];
+        Knight[element].r+=dx[d];
+        Knight[element].c+=dy[d];
 
         // 명령 받은애 아니면 데미지 계산, 죽나 확인
-        if(tmp!=n){
-            for(int j=0;j<Knight[tmp].h;j++){
-                for(int k=0;k<Knight[tmp].w;k++){
-                    if(chess[Knight[tmp].r+j][Knight[tmp].c+k]==1){ // 함정이라면
-                        Knight[tmp].dm++; //데미지 계산
-                        Knight[tmp].k--; // 체력 계산
-                        if(Knight[tmp].k<=0){ // 체력 고갈된 경우 죽음
-                            Knight[tmp].r=-1; 
-                            Knight[tmp].c=-1;
-                            Knight[tmp].h=-1;
-                            Knight[tmp].w=-1;
+        if(element!=n){
+            for(int j=0;j<Knight[element].h;j++){
+                for(int k=0;k<Knight[element].w;k++){
+                    if(chess[Knight[element].r+j][Knight[element].c+k]==1){ // 함정이라면
+                        Knight[element].dm++; //데미지 계산
+                        Knight[element].k--; // 체력 계산
+                        if(Knight[element].k<=0){ // 체력 고갈된 경우 죽음
+                            Knight[element].r=-1; 
+                            Knight[element].c=-1;
+                            Knight[element].h=-1;
+                            Knight[element].w=-1;
                             break;
                         }
                     }
                 }
-                if(Knight[tmp].r==-1)break;
+                if(Knight[element].r==-1)break;
             }
         }
-        if(Knight[tmp].r!=-1){ //안죽었으면 다시 배치
-            for(int j=0;j<Knight[tmp].h;j++){
-                for(int k=0;k<Knight[tmp].w;k++){
-                    knLo[Knight[tmp].r+j][Knight[tmp].c+k]=tmp;
+    }
+    for (auto element : s){
+        if(Knight[element].r!=-1){ //안죽었으면 다시 배치
+            for(int j=0;j<Knight[element].h;j++){
+                for(int k=0;k<Knight[element].w;k++){
+                    knLo[Knight[element].r+j][Knight[element].c+k]=element;
                 }
             }
         }
     }
+
 
     
 }
@@ -78,9 +77,8 @@ void play(int n,int d){
     int w=Knight[n].w;
 
     queue <int> nextK;
-    deque <int> tmp;
-    while(!tmp.empty())tmp.pop_back();
-    tmp.push_back(n);
+    set <int> tmp;
+    tmp.insert(n);
     int can=1;
     for(int j=0;j<h;j++){
         for(int k=0;k<w;k++){
@@ -91,7 +89,7 @@ void play(int n,int d){
             int next= knLo[r+j+dx[d]][c+k+dy[d]];
             if(next!=0&&next!=n) {
                 nextK.push(next);
-                tmp.push_back(next);
+                tmp.insert(next);
             }
         }
         if(can==0)break;
@@ -110,7 +108,7 @@ void play(int n,int d){
                     
                     if(next!=0&&next!=nn) {
                         nextK.push(next);
-                        tmp.push_back(next);
+                        tmp.insert(next);
                     }
                 }
                 if(can==0)break;
@@ -154,7 +152,7 @@ int main() {
     while(rr++<Q){
         cin>>n>>d;
         play(n,d);
-        
+        // for(int i=1;i<=L;i++){for(int j=1;j<=L;j++){cout<<knLo[i][j];}cout<<endl;}
     }
     int ans=0;
     for(knight k: Knight){
