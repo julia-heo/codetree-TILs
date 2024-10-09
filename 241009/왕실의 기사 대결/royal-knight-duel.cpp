@@ -75,6 +75,7 @@ void play(int n,int d){
     int c=Knight[n].c;
     int h=Knight[n].h;
     int w=Knight[n].w;
+    if(r==-1) return;
 
     queue <int> nextK;
     set <int> tmp;
