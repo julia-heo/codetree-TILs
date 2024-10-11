@@ -25,16 +25,8 @@ void changeParents(int c1, int c2){
     int tmp=Chat[c1].parent;
     Chat[c1].parent=Chat[c2].parent;
     Chat[c2].parent=tmp;
-    tmp=Chat[c1].alarm;
-    Chat[c1].alarm=Chat[c2].alarm;
-    Chat[c2].alarm=tmp;
-
 }
 void checkAlarm(int c){
-    if(Chat[c].alarm==0){
-        cout<<0<<endl;
-        return;
-    }
     int cnt=0;
     queue <pair<int,int>> check;
     check.push(make_pair(c,1));
