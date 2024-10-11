@@ -29,7 +29,7 @@ void changeParents(int c1, int c2){
 }
 void checkAlarm(int c){
     if(Chat[c].alarm==0){
-        cout<<0;
+        cout<<0<<endl;
         return;
     }
     int cnt=0;
